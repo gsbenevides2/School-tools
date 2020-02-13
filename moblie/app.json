@@ -1,37 +1,38 @@
 {
-   "expo": {
-      "android": {
-         "backgroundColor": "#282A36"
-      },
-      "androidNavigationBar": {
-         "backgroundColor": "#282A36"
-      },
-      "assetBundlePatterns": [
-         "**/*"
-      ],
-      "icon": "./assets/icon.png",
-      "ios": {
-         "supportsTablet": true
-      },
-      "name": "SchoolTools",
-      "orientation": "portrait",
-      "platforms": [
-         "ios",
-         "android",
-         "web"
-      ],
-      "primaryColor": "#282A36",
-      "privacy": "public",
-      "sdkVersion": "36.0.0",
-      "slug": "SchoolTools",
-      "splash": {
-         "backgroundColor": "#282A36",
-         "image": "./assets/splash.png",
-         "resizeMode": "contain"
-      },
-      "updates": {
-         "fallbackToCacheTimeout": 0
-      },
-      "version": "1.0.0"
-   }
+ "expo": {
+	"android": {
+	 "package":"com.gsbenevides2.schooltools",
+	 "backgroundColor": "#282A36"
+	},
+	"androidNavigationBar": {
+	 "backgroundColor": "#282A36"
+	},
+	"assetBundlePatterns": [
+	 "**/*"
+	],
+	"icon": "./assets/icon.png",
+	"ios": {
+	 "supportsTablet": true
+	},
+	"name": "SchoolTools",
+	"orientation": "portrait",
+	"platforms": [
+	 "ios",
+	 "android",
+	 "web"
+	],
+	"primaryColor": "#282A36",
+	"privacy": "public",
+	"sdkVersion": "36.0.0",
+	"slug": "SchoolTools",
+	"splash": {
+	 "backgroundColor": "#282A36",
+	 "image": "./assets/splash.png",
+	 "resizeMode": "contain"
+	},
+	"updates": {
+	 "fallbackToCacheTimeout": 0
+	},
+	"version": "1.0.0"
+ }
 }

@@ -107,6 +107,7 @@ module.exports ={
 	 week,
 	 professor,
 	 time,
+	 position,
 	 access_token
 	} = request.body
 	if(access_token !== process.env.ACCESS_TOKEN){
@@ -119,6 +120,7 @@ module.exports ={
 	 materia,
 	 week,
 	 professor,
+	 position,
 	 time
 	})
 	 .then((aula)=>{

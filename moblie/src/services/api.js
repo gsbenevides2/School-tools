@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 const api = axios.create({
- baseURL:'http://localhost:5000/school-tools-gsb/us-central1/v1'
+ baseURL:'https://us-central1-school-tools-gsb.cloudfunctions.net/v1'
 })
 
 const module = {

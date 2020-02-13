@@ -1,0 +1,111 @@
+import React from 'react';
+import {
+ ScrollView,
+ RefreshControl,
+ Text
+} from 'react-native';
+
+import api from '../../services/api'
+import { connect } from 'react-redux';
+import appActions  from '../../appActions';
+import CardMateria from '../../components/CardMateria'
+import CardAdd from '../../components/CardAdd'
+import MessageScreen from '../../components/MessageScreen'
+import styles from './styles'
+
+function DayScreen(props){
+ props.week === 'segunda' && console.log('a',props.days,props.week)
+ const [data,setData] = React.useState(props.days? props.days[props.week] : null)
+ props.week === 'segunda' && console.log('a1',data,props.week)
+ const [loading, setLoading] = React.useState(data?false:true)
+ const [message, setMessage] = React.useState(null)
+
+ function onRefresh(setRefreshing){
+	setLoading(true)
+	api.getDays()
+	 .then(days=>{
+		props.dispatch(appActions.setDays(days))
+		const data = days[props.week]
+		setData(data)
+		setLoading(false)
+	 })
+	 .catch(message=>{
+		setMessage(message)
+		setLoading(false)
+	 })
+ }
+ function toAula(aula){
+	props.navigation.navigate("Aula",{aula:aula})
+ }
+ function newAula(){
+	props.navigation.navigate("AulaEditing",{title:'Nova Aula',newAula:true})
+ }
+ React.useEffect(()=>{
+	if(!data){
+	api.getDays()
+		.then(days=>{
+		props.dispatch(appActions.setDays(days))
+		 const data = days[props.week]
+		 props.week === 'segunda' && console.log('c',data,props.week)
+		 setData(data)
+		 setLoading(false)
+	 })
+	 .catch(message=>{
+		setMessage(message)
+		setLoading(false)
+	 })
+	}
+ },[])
+ React.useEffect(()=>{
+	if(data){
+		setLoading(false)
+	 api.loadAccessToken()
+		.then(accessToken=>{
+		 if(accessToken){
+			props.dispatch(appActions.setAccessToken(accessToken))
+		 }
+		})
+		.catch(console.log)
+	}
+ },[data])
+ function LoadContent(){
+	props.week === 'segunda' && console.log("b",data,props.days,props.week)
+	if(loading){
+	 return <MessageScreen type='loading' />
+	}
+	else if(message){
+	 return <MessageScreen type={message} />
+	}
+	else if(data.length===0 && !props.accessToken){
+	 return <MessageScreen type='empty' />
+	}
+	else{
+	 const aulas = 	data.map((e,i)=>{
+		if(e){
+		 return <CardMateria key={i} onPress={()=>toAula(e)} {...e} />
+		}
+		else return null
+	 })
+	 const addAula = <CardAdd onPress={newAula} key="addAula"/>
+		if(props.accessToken) aulas.push(addAula)
+	 props.week === 'segunda' && console.log('aulas',aulas,props.week)
+	 return aulas
+	}
+ }
+ 
+ return (
+	<ScrollView 
+	refreshControl={
+	 <RefreshControl refreshing={loading} onRefresh={onRefresh}/>
+	}
+	 style={styles.container}>{
+		LoadContent()
+	}</ScrollView>
+)
+}
+export default connect(store=>(
+ {
+	accessToken:store.accessToken,
+	days:store.days
+ }
+))(DayScreen)

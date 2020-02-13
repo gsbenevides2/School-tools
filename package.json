@@ -1,0 +1,9 @@
+{
+  "name": "SchoolTools",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-tools": "^7.12.1"
+  }
+}

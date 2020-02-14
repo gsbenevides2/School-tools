@@ -1,0 +1,11 @@
+language: "node_js"
+node_js:
+ - 10
+jobs:
+ include:
+  - stage: Deploy Cloud Functions
+    script: skip
+    deploy:
+     provider: firebase
+    token:
+     secure: "$FIREBASE_CLI"

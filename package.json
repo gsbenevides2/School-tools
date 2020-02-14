@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
 	"scripts":{
-	 "deploy-firebase":"cd functions && npm install && cd .. && firebase deploy --token $FIREBASE_TOKEN --non-interactive"
+	 "deploy-firebase":"cd functions && npm install && cd .. && firebase deploy --token $FIREBASE_TOKEN --non-interactive",
+	 "deploy-expo":"cd moblie && yarn install && yarn add expo-cli -D && expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD && expo publish --non-interactive"
 	},
   "dependencies": {
     "firebase-tools": "^7.12.1"

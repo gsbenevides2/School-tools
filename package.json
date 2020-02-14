@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
 	"scripts":{
-	 "deploy-firebase":"firebase deploy deploy --token $FIREBASE_TOKEN --non-interactive"
+	 "deploy-firebase":"firebase deploy --token $FIREBASE_TOKEN --non-interactive"
 	},
   "dependencies": {
     "firebase-tools": "^7.12.1"

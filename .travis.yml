@@ -4,6 +4,4 @@ node_js:
 jobs:
  include:
   - stage: Deploy Cloud Functions
-    script: skip
-    deploy:
-     provider: firebase
+    script: "yarn deploy-firebase"

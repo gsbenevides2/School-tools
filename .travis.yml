@@ -7,4 +7,3 @@ jobs:
     script: skip
     deploy:
      provider: firebase
-    token: "$FIREBASE_CLI"

@@ -7,5 +7,4 @@ jobs:
     script: skip
     deploy:
      provider: firebase
-    token:
-     secure: "$FIREBASE_CLI"
+    token: "$FIREBASE_CLI"

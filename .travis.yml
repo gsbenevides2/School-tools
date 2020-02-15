@@ -5,5 +5,3 @@ jobs:
  include:
   - stage: Deploy Cloud Functions
     script: "yarn deploy-firebase"
-  - stage: Deploy Expo
-    script: "yarn deploy-expo"

@@ -1,56 +1,11 @@
-const admin = require('firebase-admin')
-admin.initializeApp()
-
-const AulaCollection = admin.firestore().collection('aulas')
+const Aula = require('../../models/aula')
 
 const antiOverwrite = require('./utils/antiOverwrite')
 const orderByFunction = require('./utils/order')
 
-function formateDocument(doc){
- const data = doc.data()
- const _id = doc.id
- return {
-	_id,
-	...data
- }
-}
-
-function receiveAulas(){
- return new Promise(async resolve=>{
-	const aulaSnapshot = await AulaCollection.get()
-	const aulas = aulaSnapshot.docs.map(formateDocument)
-	resolve(aulas)
- })
-}
-function updateAula(id,aulaData){
- return new Promise((resolve,reject)=>{
-	const docRef = AulaCollection.doc(id)
-	docRef.set(aulaData)
-	 .then(()=>{
-		docRef.get().then(doc=>resolve(formateDocument(doc)))
-	 })
-	 .catch(reject)
- })
-}
-function saveAula(aulaData){
- return new Promise((resolve,reject)=>{
-	AulaCollection.add(aulaData)
-	 .then(docRef=>{
-		docRef.get().then(doc=>resolve(formateDocument(doc)))
-	 })
-	 .catch(reject)
- })
-}
-function deleteAula(id){
- return new Promise((resolve,reject)=>{
-	AulaCollection.doc(id).delete()
-	 .then(resolve)
-	 .catch(reject)
- })
-}
 module.exports ={
  async index(request,response){
-	let aulas = await receiveAulas()
+	let aulas = await Aula.getAll()
 	if(request.query){
 	 const {orderBy} = request.query
 	 if(orderBy){
@@ -75,11 +30,11 @@ module.exports ={
 	if(!time.match(/(\d{2}):(\d{2})-(\d{2}):(\d{2})/gm)){
 	 return response.status(400).send()
 	}
-	const aulas = await receiveAulas()
+	const aulas = await Aula.getAll()
 
 	antiOverwrite(aulas,week,null,position)
 	 .then(()=>{
-		saveAula({
+		Aula.create({
 		 materia:materia.toLowerCase(),
 		 week:week.toLowerCase(),
 		 position,
@@ -116,7 +71,7 @@ module.exports ={
 	if(!time.match(/(\d{2}):(\d{2})-(\d{2}):(\d{2})/gm)){
 	 return response.status(401).send()
 	}
-	updateAula(id,{
+	Aula.update(id,{
 	 materia,
 	 week,
 	 professor,
@@ -140,7 +95,7 @@ module.exports ={
 	if(access_token !== process.env.ACCESS_TOKEN){
 	 return response.status(401).send("Token de acesso invalido")
 	}
-	deleteAula(id)
+	Aula.delete(id)
 	 .then(()=>{
 		response.send("OK")
 	 })

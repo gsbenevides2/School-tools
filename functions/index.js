@@ -1,4 +1,6 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin')
+admin.initializeApp()
 const express = require('express')
 require('dotenv').config()
 const routes = require('./src/routes')

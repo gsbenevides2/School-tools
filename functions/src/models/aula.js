@@ -46,7 +46,7 @@ module.exports = {
 		.catch(reject)
 	})
  },
- delete(){
+ delete(id){
 	return new Promise((resolve,reject)=>{
 	 aulaCollection.doc(id).delete()
 		.then(resolve)

@@ -3,7 +3,7 @@ const Aula = require('../../models/aula')
 const antiOverwrite = require('./utils/antiOverwrite')
 const orderByFunction = require('./utils/order')
 
-module.exports ={
+const controller ={
  async index(request,response){
 	let aulas = await Aula.getAll()
 	if(request.query){
@@ -23,7 +23,6 @@ module.exports ={
 	 position,
 	 access_token
 	} = request.body
-	console.log(request.body)
 	if(access_token !== process.env.ACCESS_TOKEN){
 	 return response.status(401).send("Token de acesso invalido")
 	}
@@ -42,7 +41,10 @@ module.exports ={
 		 time
 		})
 		 .then((aula)=>{
-			response.json(aula)
+			if(request.query.return_all){
+			 controller.index(request,response)
+			}
+			else response.json(aula)
 		 })
 		 .catch(error=>{
 			console.log(error)
@@ -79,10 +81,13 @@ module.exports ={
 	 time
 	})
 	 .then((aula)=>{
-		response.json(aula)
+		if(request.query.return_all){
+		 controller.index(request,response)
+		}
+		else response.json(aula)
 	 })
-		 .catch(error=>{
-			console.log(error)
+	 .catch(error=>{
+		console.log(error)
 		response.status(500)
 		 .send("Erro não tratado")
 	 })
@@ -97,7 +102,10 @@ module.exports ={
 	}
 	Aula.delete(id)
 	 .then(()=>{
-		response.send("OK")
+		if(request.query.return_all){
+		 controller.index(request,response)
+		}
+		else response.json(aula)
 	 })
 	 .catch(error=>{
 		console.log(error)
@@ -106,3 +114,4 @@ module.exports ={
 	 })
  }
 }
+module.exports = controller

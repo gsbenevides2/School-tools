@@ -22,6 +22,10 @@ function DayScreen(props){
 	setLoading(true)
 	api.getDays()
 	 .then(dataReceived=>{
+		if(message){
+		 loadToken()
+		 setMessage(null)
+		}
 		setLoading(false)
 		props.dispatch(appActions.setDays(dataReceived))
 	 })
@@ -34,21 +38,22 @@ function DayScreen(props){
 	props.navigation.navigate("Aula",{aula:aula})
  }
  function newAula(){
-	props.navigation.navigate("AulaEditing",{title:'Nova Aula',newAula:true})
+	props.navigation.navigate("AulaEditing",{title:'Nova Aula',aula:{week}})
  }
- api.loadAccessToken()
-	.then(accessToken=>{
-	 if(accessToken){
-		props.dispatch(appActions.setAccessToken(accessToken))
-	 }
-	})
-	.catch(console.log)
-
+ function loadToken(){
+	api.loadAccessToken()
+	 .then(accessToken=>{
+		if(accessToken){
+		 props.dispatch(appActions.setAccessToken(accessToken))
+		}
+	 })
+	 .catch(console.log)
+ }
+ loadToken()
  React.useEffect(()=>{
 	if(dayData === null){
 	 loadData()
 	}
-
  },[])
  function LoadContent(){
 	if(loading){

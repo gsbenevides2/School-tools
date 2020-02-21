@@ -1,66 +1,34 @@
 import {AsyncStorage} from 'react-native'
 import {getNetworkStateAsync} from 'expo-network'
 import axios from 'axios'
+import network  from './network'
 
 
 const api = axios.create({
  baseURL:'https://us-central1-school-tools-gsb.cloudfunctions.net/v1'
 })
 
+const api_new  = network('http://localhost:5000/school-tools-gsb/us-central1/v1/')
 const module = {
  getDays(){
-	return new Promise(async (resolve,reject)=>{
-	 getNetworkStateAsync().then(async({isConnected})=>{
-		if(isConnected){
-		 api.get('/aula',{
-			params:{
-			 orderBy:'weekAndPosition'
-			}
-		 }).then(response=>{
-			AsyncStorage.setItem('aula',JSON.stringify(response.data))
-			resolve(response.data)
-		 })
-			.catch(async(error)=>{
-			 const data = JSON.parse(await AsyncStorage.getItem('aula'))
-			 if(data)resolve(data)
-			 else reject('server')
-			})
-		}
-		else{
-		 const data = JSON.parse(await AsyncStorage.getItem('aula'))
-		 if(data)resolve(data)
-		 else reject('offline')
-		}
-	 })
-		.catch(async()=>{
-		 const data = JSON.parse(await AsyncStorage.getItem('aula'))
-		 if(data)resolve(data)
-		 else reject('offline')
-		})
+	return api_new.get('aula',{
+	 params:{
+		orderBy:'weekAndPosition'
+	 }
 	})
  },
  validAccessToken(accessToken){
 	return new Promise(async (resolve,reject)=>{
-	 getNetworkStateAsync().then(async({isConnected})=>{
-		if(isConnected){
-		 api.get("/auth",{params:{accessToken}})
-			.then(()=>{
-			 AsyncStorage.setItem('accessToken',accessToken)
-			 resolve()
-			})
-			.catch(({request})=>{
-			 if(request.status===401){
-				reject('Token invalido')
-			 }
-			 else reject("Erro desconhecido")
-			})
-		}
-		else{
-		 reject("Você está offline")
-		}
-	 })
-		.catch(()=>{
-		 reject("Você está offline")
+	 api_new.get("auth",{params:{accessToken}})
+		.then(()=>{
+		 AsyncStorage.setItem('accessToken',accessToken)
+		 resolve()
+		})
+		.catch((code,error)=>{
+		 if(code ==='axios-error' && error.request.status===401){
+			reject('Token invalido')
+		 }
+		 else reject("Erro desconhecido")
 		})
 	})
  },
@@ -84,82 +52,50 @@ const module = {
  },
  deleteAula(id){
 	return new Promise(async(resolve,reject)=>{
-	 getNetworkStateAsync().then(async({isConnected})=>{
-		if(isConnected){
-		 const access_token = await AsyncStorage.getItem('accessToken')
-		 api.delete('/aula',{
-			data:{id,access_token}
-		 }).then(async()=>{
-			resolve(await this.getDays())
-		 })
-			.catch(({request})=>{
-			 if(request.status===401){
-				reject('Token Invalido. Autentique-se novamente')
-			 }
-			 else reject('Erro desconhecido')
-			})
-		}
-		else{
-		 reject("Você está offline")
+	 const access_token = await AsyncStorage.getItem('accessToken')
+	 api_new.delete('aula',{
+		data:{id,access_token},
+		params:{
+		 return_all:true,
+		 orderBy:'weekAndPosition'
 		}
 	 })
-		.catch(()=>{
-		 reject("Você está offline")
-		})
+		.then(resolve)
+		.catch(reject)
 	})
  },
  createAula(aulaData){
 	return new Promise(async(resolve,reject)=>{
-	 getNetworkStateAsync().then(async({isConnected})=>{
-		if(isConnected){
-		 const access_token = await AsyncStorage.getItem('accessToken')
-		 api.post('/aula',{
-			access_token,...aulaData
-		 }).then(async()=>{
-			resolve(await this.getDays())
-		 })
-			.catch(({request})=>{
-			 console.log(request)
-			 if(request.status===401){
-				reject('Token Invalido. Autentique-se novamente')
-			 }
-			 else reject('Erro desconhecido')
-			})
-		}
-		else{
-		 reject("Você está offline")
+	 const access_token = await AsyncStorage.getItem('accessToken')
+	 api_new.post(`aula`,{
+		data:{
+		 access_token,
+		 ...aulaData,
+		},
+		params:{
+		 return_all:true,
+		 orderBy:'weekAndPosition'
 		}
 	 })
-		.catch(()=>{
-		 reject("Você está offline")
-		})
+		.then(resolve)
+		.catch(reject)
 	})
  },
  updateAula(aulaData){
 	return new Promise(async(resolve,reject)=>{
-	 getNetworkStateAsync().then(async({isConnected})=>{
-		if(isConnected){
-		 const access_token = await AsyncStorage.getItem('accessToken')
-		 api.put('/aula',{
-			access_token,...aulaData
-		 }).then(async()=>{
-			resolve(await this.getDays())
-		 })
-			.catch(({request})=>{
-			 console.log(request)
-			 if(request.status===401){
-				reject('Token Invalido. Autentique-se novamente')
-			 }
-			 else reject('Erro desconhecido')
-			})
-		}
-		else{
-		 reject("Você está offline")
+	 const access_token = await AsyncStorage.getItem('accessToken')
+	 api_new.put('aula',{
+		data:{
+		 access_token,
+		 ...aulaData
+		},
+		params:{
+		 return_all:true,
+		 orderBy:'weekAndPosition'
 		}
 	 })
-		.catch(()=>{
-		 reject("Você está offline")
-		})
+		.then(resolve)
+		.catch(reject)
 	})
  }
 }

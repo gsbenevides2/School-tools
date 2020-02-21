@@ -12,9 +12,7 @@ import api from '../../services/api'
 import styles from './styles'
 
 function AulaEditing(props){
- const newAula = props.navigation.getParam('newAula')
  const aula = props.navigation.getParam('aula')
-
  function generateDateFromString(time,start){
 	const re = /(\d{2}):(\d{2})-(\d{2}):(\d{2})/gm
 	const results = re.exec(time)
@@ -22,15 +20,15 @@ function AulaEditing(props){
 	const date = new Date(2020,11,1,results[start?1:3],results[start?2:4])
 	return date
  }
- const [materia, setMateria] = React.useState(newAula?'':aula.materia)
- const [professor, setProfessor] = React.useState(newAula?'':aula.professor)
- const [timeStart, setTimeStart] = React.useState(newAula?new Date():generateDateFromString(aula.time,true))
+ const [materia, setMateria] = React.useState(aula.materia||'')
+ const [professor, setProfessor] = React.useState(aula.professor||'')
+ const [timeStart, setTimeStart] = React.useState(!aula.time?new Date():generateDateFromString(aula.time,true))
  const [timeStartShow, setTimeStartShow] = React.useState(false)
- const [timeEnd, setTimeEnd] = React.useState(newAula?new Date():generateDateFromString(aula.time,false))
+ const [timeEnd, setTimeEnd] = React.useState(!aula.time?new Date():generateDateFromString(aula.time,false))
  const [timeEndShow, setTimeEndShow] = React.useState(false)
 
- const [position, setPosition] = React.useState(newAula?'':`${aula.position}`)
- const [week, setWeek] = React.useState(newAula?'':aula.week)
+ const [position, setPosition] = React.useState(!aula.position?'':`${aula.position}`)
+ const [week, setWeek] = React.useState(aula.week||'')
  function formateTime(time){
 	return `${time.getHours()<10? `0${time.getHours()}` : time.getHours()}:${time.getMinutes() <10 ? `0${time.getMinutes()}` : time.getMinutes()}`
  }
@@ -60,7 +58,7 @@ function AulaEditing(props){
 		color:'#282A36'
 	 }) 
 	}
-	if(newAula){
+	if(!aula._id){
 	 api.createAula({
 		materia,
 		professor,

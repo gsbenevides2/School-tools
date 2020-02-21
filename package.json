@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
 	"scripts":{
+	 "dev":"firebase serve",
 	 "deploy-firebase":"cd functions && npm install && cd .. && firebase deploy --token $FIREBASE_TOKEN --non-interactive"
 	},
   "dependencies": {
